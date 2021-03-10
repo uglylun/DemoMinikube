@@ -2,18 +2,21 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mini-system-time
-  namespace: 
+  namespace: wiredcraft
   labels:
     app: system-time-service
 spec:
   ports:
-  - port: 8000
+  - name: system-time
+    port: 8080
     targetPort: 8000
   selector:
-    app: linear-swap-api
+    app: system-time-app
+  externalIPs:
+  - 139.198.188.93 
 ---
 
-apiVersion: apps/v1 #  for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+apiVersion: apps/v1 
 kind: Deployment
 metadata:
   name: system-time-dp
@@ -22,7 +25,7 @@ spec:
   selector:
     matchLabels:
       app: system-time-app
-  replicas: 1
+  replicas: 2
   minReadySeconds: 10
   progressDeadlineSeconds: 600
   revisionHistoryLimit: 10
@@ -38,8 +41,8 @@ spec:
     spec:
       terminationGracePeriodSeconds: 300
       containers:
-      - name: master
-        image: reg.huobi.com/wiredcraft/system-time-demo:TAG # or just image: redis
+      - name: main-system-time
+        image: 139.198.188.93/minicraft/demo:v0.1
         resources:
           limits:
             cpu: 300m
