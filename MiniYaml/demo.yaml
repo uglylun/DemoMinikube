@@ -6,14 +6,14 @@ metadata:
   labels:
     app: system-time-service
 spec:
+  type: NodePort
   ports:
   - name: system-time
+    nodePort: 8080
     port: 8080
     targetPort: 8000
   selector:
     app: system-time-app
-  externalIPs:
-  - 139.198.188.93 
 ---
 
 apiVersion: apps/v1 
