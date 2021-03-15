@@ -6,7 +6,7 @@ metadata:
   labels:
     app: system-time-service
 spec:
-  type: nodePort
+  type: NodePort
   ports:
   - name: system-time
     nodePort: 8080
