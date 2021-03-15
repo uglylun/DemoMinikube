@@ -34,7 +34,7 @@ jobs:
       - name: build docker images
         run: |
           cd app
-          docker build -t . demo:latest
+          docker build -t minicraft:latest .
           docker tag minicraft:latest uglylun/minicraft:latest
           docker push uglylun/minicraft:latest
       # Runs a set of commands using the runners shell
