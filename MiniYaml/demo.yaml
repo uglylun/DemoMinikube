@@ -42,7 +42,7 @@ spec:
       terminationGracePeriodSeconds: 300
       containers:
       - name: main-system-time
-        image: 139.198.188.93/minicraft/demo:v0.1
+        image: uglylun/minicraft:latest
         resources:
           limits:
             cpu: 300m
