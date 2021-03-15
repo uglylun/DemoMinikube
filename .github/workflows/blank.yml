@@ -26,11 +26,22 @@ jobs:
       - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: login docker harbor
+        env: minicraft
+        run: docker login -u ${DOCKER_HARBOR_USER} -p ${DOCKER_HARBOR_PASSWORD} http://139.198.188.93:8080
+        
+      - name: build docker images
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          cd app
+          docker build -t . demo:latest
+          docker tag demo:latest 139.198.188.93:8080/minicraft/demo:latest
+          docker push 139.198.188.93:8080/minicraft/demo:latest
+      # Runs a set of commands using the runners shell
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: deploy on commit
+        run: |
+           cd DemoMinikube
+           kubectl apply -f demon.yaml 
+         
