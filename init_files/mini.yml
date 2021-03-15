@@ -1,0 +1,50 @@
+- hosts: minikube_ip
+  tasks:
+  - firewalld:
+        state: disabled
+        permanent: yes
+        immediate: yes
+
+  - selinux:
+        policy: targeted
+        state: permissive
+
+  - name: "yum repository configuration"
+    yum_repository:
+        name: "{{ item.na }}"
+        description: "repos for minikube"
+        baseurl: "{{ item.baseurl }}"
+        gpgcheck: no
+  
+    loop:
+    - {   baseurl: "https://download.docker.com/linux/centos/8/x86_64/stable/" , na: "docker_insttallation" }
+  
+  - name: "installing docker and conntrack-tools  ..."
+    package:
+        name: "{{ item.package_name }}"
+        state: present
+  
+    loop:
+    - {   package_name: "docker-ce-20.10.4-3.el8.x86_64"   }
+    - {   package_name: "docker-ce-cli-20.10.4-3.el8.x86_64"  }
+
+
+  - name: "downloading binaries ..."
+    get_url:
+        url: "{{ item.resource_url }}"
+        dest: "/home/"
+
+    loop:
+    - {   resource_url: "https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64"  }
+    - {   resource_url: "https://storage.googleapis.com/kubernetes-release/release/v1.20.4/bin/linux/amd64/kubectl"  }
+
+  - name: "installing minikube and configuring ..."
+    shell:
+        cmd: "{{ item.command }}"
+
+    loop:
+    - {   command: "sudo install minikube-linux-amd64 /usr/local/bin/minikube"   }
+    - {   command: "minikube config set driver none"   }
+    - {   command: "minikube start --insecure-registry=139.198.188.93 --extra-config=apiserver.service-node-port-range=70-65535"  }
+    - {   command: "chmod +x /root/kubectl"   }
+    - {   command: "sudo mv /root/kubectl /usr/local/bin/kubectl"   } 
