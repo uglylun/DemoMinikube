@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: login docker harbor
-        run: echo ${{ secrets.DOCKER_HARBOR_PASSWORD }} | docker login -u ${{ secrets.DOCKER_HARBOR_USER }} -p  http://139.198.188.93:8080
+        run: echo ${{ secrets.DOCKER_HARBOR_PASSWORD }} | docker login http://139.198.188.93:8080 -u ${{ secrets.DOCKER_HARBOR_USER }}  --password-stdin
         
       - name: build docker images
         run: |
