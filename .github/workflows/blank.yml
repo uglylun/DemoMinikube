@@ -44,6 +44,6 @@ jobs:
     steps:
       - name: deploy on commit
         run: |
-           cd /home/minicraft/DemoMinikube
-           kubectl apply -f demon.yaml 
+           cd /home/minicraft/DemoMinikube/MiniYaml
+           kubectl apply -f demo.yaml 
          
