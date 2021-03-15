@@ -1,0 +1,54 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: system-time-dp
+  namespace: wiredcraft
+spec:
+  selector:
+    matchLabels:
+      app: system-time-app
+  replicas: 1
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: system-time-app
+    spec:
+      terminationGracePeriodSeconds: 300
+      hostNetwork: true
+      containers:
+      - name: main-system-time
+        image: 139.198.188.93/minicraft/demo:v0.1
+        resources:
+          limits:
+            cpu: 300m
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8000
+          hostPort: 8000
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 180
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8000
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8000
+          timeoutSeconds: 1
